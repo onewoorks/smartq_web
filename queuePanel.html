@@ -1,0 +1,52 @@
+<!--
+To change this template, choose Tools | Templates
+and open the template in the editor.
+-->
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>List Of Pre-Registration</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <script src="assets/javascript/jquery-1.11.1.min.js" ></script>
+        <script src='assets/javascript/common.js'></script>
+    </head>
+    <body>
+        <div>Queue Panel</div>
+        <h1>Organisation : </h1>
+        <table>
+            <thead>
+                <tr>
+                    <th>No</th>
+                    <th>Register Queue</th>
+                    <th>Customer Name</th>
+                    <th>Status</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+        <script>
+        $(function(){
+            var $org_id = getUrlVars()['id'];
+            $.ajax({
+                url : 'http://localhost:81/spp-helpdesk/smartq_api/queue.json?id='+$org_id,
+                success : function(data){
+                    var table ='';
+                    console.log(data);
+                    $(data).each(function(i,v){
+                        table += '<tr>';
+                        table += '<td>'+(i+1)+'</td>';
+                        table += '<td>'+v.timestamp+'</td>';
+                        table += '<td>'+v.name+'</td>';
+                        table += '<td>'+v.status+'</td>';
+                        table += '<td>View | Call | Remind</td>';
+                        table += '</tr>';
+                        $("table tbody").html(table);
+                    });
+                }
+            });
+        });
+        </script>
+    </body>
+
+</html>

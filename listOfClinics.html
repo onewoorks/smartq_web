@@ -1,0 +1,32 @@
+<!--
+To change this template, choose Tools | Templates
+and open the template in the editor.
+-->
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>List Of Clinic</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <script src="assets/javascript/jquery-1.11.1.min.js" ></script>
+    </head>
+    <body>
+        <h1>List Of Clinics</h1>
+        <ul id='listClinics'>
+        </ul>
+
+        <script>
+            $(function(){
+                $.ajax({
+                        type: 'GET',
+                        url: 'http://localhost:81/spp-helpdesk/smartq_api/organisation.json',
+                        dataType:'json',
+                        success: function(data) {
+                            $(data).each(function(i,v){
+                                $('#listClinics').append('<li><a href="./organisation_info.html?id='+v.id+'" >'+v.name +' | '+ v.queno + '</a></li>');
+                            });
+                        }
+                    });
+            });
+            </script>
+    </body>
+</html>

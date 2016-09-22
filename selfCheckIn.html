@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Self Check In</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <script src="assets/javascript/jquery-1.11.1.min.js" ></script>
+        <script src='assets/javascript/common.js'></script>
+    </head>
+    <body>
+        <h1>Self Check In</h1>
+
+        <form id='selfCheckIn'>
+            <p>Please insert you authorize code</p>
+            <input type='text' name='code_authorize' placeholder="authorize_code" />
+            <input id='org_id' type='text' name='org_id' value='' />
+            <button type='submit'>Verify</button>
+        </form>
+
+        <div id='selfCheckInMessage'></div>
+
+        <script>
+            $(function() {
+                var $orgId = getUrlVars()['id'];
+                $('#org_id').val($orgId);
+                $('#selfCheckIn').submit(function(e) {
+                    e.preventDefault();
+                    var $values = $(this).serializeArray();
+                    $.ajax({
+                        type: 'POST',
+                        data: {values: $values},
+                        url: 'http://localhost:81/spp-helpdesk/smartq_api/verify.json',
+                        success: function(data) {
+                            $(data).each(function(i, v) {
+                                if (v.status == 'success') {
+                                    $('#selfCheckIn').remove();
+                                }
+                                $('#selfCheckInMessage').html(v.message);
+                            });
+                        }
+                    });
+                });
+            });
+        </script>
+    </body>
+</html>
