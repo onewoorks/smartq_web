@@ -5,59 +5,63 @@ and open the template in the editor.
 <!DOCTYPE html>
 <html>
     <head>
-        <title>Organisation Info</title>
+        <title>SmartQ : Organisation Info</title>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"  />
         <script src="assets/javascript/jquery-1.11.1.min.js" ></script>
     </head>
     <body>
-        <h1>Organisation Info</h1>
-        <table>
-            <tr>
-                <th>Nama Klinik</th>
-                <td><span id='clinicname'></span></td>
-            </tr>
-            <tr>
-                <th>Alamat</th>
-                <td><span id='clinicalamat'></span></td>
-            </tr>
-            <tr>
-                <th>Daerah</th>
-                <td><span id='clinicdaerah'></span></td>
-            </tr>
-            <tr>
-                <th>No Negeri</th>
-                <td><span id='clinicnegeri'></span></td>
-            </tr>
-            <tr>
-                <th>No Telefon</th>
-                <td><span id='clinicphone'></span></td>
-            </tr>
-            <tr>
-                <th>Queue Number</th>
-                <td><span id='queno'></span></td>
-            </tr>
-            <tr>
-                <td colspan="2"><a id='addToQueue'>Add To Queue</a></td>
-            </tr>
+        <div class="container">
+            <br>
+            <div class="panel panel-default">
+                <div class='panel-header'>Organisation Info</div>
+                    <table class="table ">
+                        <tr>
+                            <th>Nama Klinik</th>
+                            <td><span id='clinicname'></span></td>
+                        </tr>
+                        <tr>
+                            <th>Alamat</th>
+                            <td><span id='clinicalamat'></span></td>
+                        </tr>
+                        <tr>
+                            <th>Daerah</th>
+                            <td><span id='clinicdaerah'></span></td>
+                        </tr>
+                        <tr>
+                            <th>No Negeri</th>
+                            <td><span id='clinicnegeri'></span></td>
+                        </tr>
+                        <tr>
+                            <th>No Telefon</th>
+                            <td><span id='clinicphone'></span></td>
+                        </tr>
+                        <tr>
+                            <th>Queue Number</th>
+                            <td><span id='queno'></span></td>
+                        </tr>
+                    </table>
+                <div class='panel-footer text-right'>
+                    <a class='btn btn-primary' id='addToQueue'>Add To Queue</a>
+                </div>
+            </div>
+        </div>
 
-
-        </table>
         <script>
             function getUrlVars() {
                 var vars = {};
                 var parts = window.location.href.replace(/[?&]+([^=&]+)=([^&]*)/gi,
-                        function(m, key, value) {
+                        function (m, key, value) {
                             vars[key] = value;
                         });
                 return vars;
             }
-            $(function() {
+            $(function () {
                 var $org_id = getUrlVars()["id"];
                 $.ajax({
-                    url : 'http://localhost:81/spp-helpdesk/smartq_api/organisation.json?id='+$org_id,
-                    success : function (data){
-                        $(data).each(function(i,v){
-
+                    url: 'https://onewoorks-solutions.com/smartq/organisation.json?id=' + $org_id,
+                    success: function (data) {
+                        $(data).each(function (i, v) {
                             $('#clinicname').html(v.name);
                             $('#clinicalamat').html(v.alamat);
                             $('#clinicdaerah').html(v.daerah);
@@ -68,8 +72,8 @@ and open the template in the editor.
                     }
                 });
 
-                $('#addToQueue').click(function(){
-                    window.location = './addToQueue.html?id='+$org_id;
+                $('#addToQueue').click(function () {
+                    window.location = './addToQueue.html?id=' + $org_id;
                 });
             });
         </script>

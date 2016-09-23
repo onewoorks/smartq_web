@@ -1,29 +1,44 @@
-<!--
-To change this template, choose Tools | Templates
-and open the template in the editor.
--->
 <!DOCTYPE html>
 <html>
     <head>
-        <title>List Of Clinic</title>
+        <title>SmartQ : List Of Organisation</title>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"  />
         <script src="assets/javascript/jquery-1.11.1.min.js" ></script>
     </head>
     <body>
+        <div class="container">
+            
         <h1>List Of Clinics</h1>
-        <ul id='listClinics'>
-        </ul>
-
+        <table id="organisationTable" class="table">
+            <thead>
+                <tr>
+                    <th>No</th>
+                    <th>Organisation Name</th>
+                    <th class="text-center">Queue Status</th>
+                </tr>
+            </thead>
+            
+            <tbody></tbody>
+        </table>    
+        </div>
+        
         <script>
             $(function(){
                 $.ajax({
                         type: 'GET',
-                        url: 'http://localhost:81/spp-helpdesk/smartq_api/organisation.json',
+                        url: 'https://onewoorks-solutions.com/smartq/organisation.json',
                         dataType:'json',
                         success: function(data) {
+                            var $tabledata = '';
                             $(data).each(function(i,v){
-                                $('#listClinics').append('<li><a href="./organisation_info.html?id='+v.id+'" >'+v.name +' | '+ v.queno + '</a></li>');
+                                $tabledata += '<tr>';
+                                $tabledata += '<td class="text-center">'+(i+1)+'</td>';
+                                $tabledata += '<td><a href="./organisation_info.html?id='+v.id+'" >'+v.name +'</a></td>';
+                                $tabledata += '<td class="text-center">'+ v.queno + '</td>';
+                                $tabledata += '</tr>';                                
                             });
+                            $('#organisationTable tbody').append($tabledata);
                         }
                     });
             });

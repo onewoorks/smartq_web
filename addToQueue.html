@@ -6,51 +6,93 @@ and open the template in the editor.
 <html>
 
     <head>
-        <title>Add To Queue</title>
+        <title>SmartQ : Add To Queue</title>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"  />
         <script src="assets/javascript/jquery-1.11.1.min.js" ></script>
     </head>
     <body>
-        <div id='preregisterform'>
-        <h1>Patient Pre-Register</h1>
-        <form id='sendPatient'>
-            <input name='org_id' id='org_id' value='' /><br>
-            <input name='name' placeholder="name" /><br>
-            <input name='identification_no' placeholder="identification_no" /><br>
-            <input name='contact_no' placeholder="contact_no"/><br>
-            <textarea name='address' placeholder="alamat"></textarea><br>
-            <button type='submit'>Pre Register</button>
-        </form>
+        <div class='container'>
+            <br>
+
+            <div class='panel panel-default'>
+                <div class='panel-heading'>Patient Pre Register</div>
+                <div class='panel-body'>
+                    <div class='alert alert-success' id='preregistermessage'></div>
+                    <div id='preregisterform'>
+                        <div class='row'>
+                            <div class='col-md-6'>
+                                <form id='sendPatient' class='form'>
+                                    <div class='form-group hidden'>
+                                        <label class=''>Organisation </label>
+                                        <input name='org_id' id='org_id' value='' class='form-control' />
+                                        <input type='hidden' name='register_type' value='web' />
+                                    </div>
+                                    <div class='form-group'>
+                                        <label class='control-label'>Name</label>
+                                        <input name='name' placeholder="name"  class='form-control'/>
+                                    </div>
+                                    <div class='form-group'>
+                                        <label class='control-label'>Identification No</label>
+                                        <input name='identification_no' placeholder="identification no" class='form-control' />
+                                    </div>
+                                    <div class='form-group'>
+                                        <label class='contol-label'>Contact No</label>
+                                        <input name='contact_no' placeholder="contact no" class='form-control'/>
+                                    </div>
+                                    <div class='form-group'>
+                                        <label class='control-label'>Address</label>
+                                        <textarea name='address' placeholder="alamat" class='form-control' rows="4"></textarea>
+                                    </div>
+                                    <div class='form-group text-right'>
+                                        <button type='submit' class='btn btn-primary'>Pre Register</button>
+                                    </div>
+                                </form>
+                            </div>   
+                        </div>
+                    </div>
+                </div>
+
+
+            </div>
+
         </div>
 
-        <div id='preregistermessage'></div>
         <script>
             function getUrlVars() {
                 var vars = {};
                 var parts = window.location.href.replace(/[?&]+([^=&]+)=([^&]*)/gi,
-                        function(m, key, value) {
+                        function (m, key, value) {
                             vars[key] = value;
                         });
                 return vars;
             }
-            $(function() {
+            $(function () {
+                $('#preregistermessage').hide();
                 var $org_id = getUrlVars()['id'];
                 $('#org_id').val($org_id);
-                $('#sendPatient').submit(function(e) {
+                $('#sendPatient').submit(function (e) {
                     e.preventDefault();
                     var values = $(this).serializeArray();
                     $.ajax({
                         type: 'POST',
-                        data : {values : values},
-                        url: 'http://localhost:81/spp-helpdesk/smartq_api/queue.json',
-                        dataType:'json',
-                        success: function(data) {
+                        data: {values: values},
+                        url: 'https://onewoorks-solutions.com/smartq/queue.json',
+                        dataType: 'json',
+                        success: function (data) {
+                            console.log(data);
                             var your_queue_no;
-                            $(data).each(function(i,v){
+                            $(data).each(function (i, v) {
                                 your_queue_no = v.queue_no;
                             });
                             $('#preregisterform').remove();
-                            $('#preregistermessage').html('Your queue number is '+ your_queue_no);
+                            $('#preregistermessage')
+                                    .show()
+                                    .html('Your queue number is ' + your_queue_no);
+                            var explode = function () {
+                                window.location.reload();
+                            };
+                            setTimeout(explode, 6000);
                         }
                     });
                 });
