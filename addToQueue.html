@@ -6,6 +6,7 @@ and open the template in the editor.
 <html>
 
     <head>
+        <link rel="icon" href="favicon.ico">
         <title>SmartQ : Add To Queue</title>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"  />
@@ -80,15 +81,16 @@ and open the template in the editor.
                         url: 'https://onewoorks-solutions.com/smartq/queue.json',
                         dataType: 'json',
                         success: function (data) {
-                            console.log(data);
+                            var message;
                             var your_queue_no;
                             $(data).each(function (i, v) {
                                 your_queue_no = v.queue_no;
+                                message = v.message;
                             });
                             $('#preregisterform').remove();
                             $('#preregistermessage')
                                     .show()
-                                    .html('Your queue number is ' + your_queue_no);
+                                    .html( message + ', ' + your_queue_no);
                             var explode = function () {
                                 window.location.reload();
                             };

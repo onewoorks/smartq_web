@@ -1,13 +1,11 @@
-<!--
-To change this template, choose Tools | Templates
-and open the template in the editor.
--->
 <!DOCTYPE html>
 <html>
     <head>
-        <title>List Of Pre-Registration</title>
+        <link rel="icon" href="favicon.ico">
+        <title>SmartQ : List Of Pre-Registration</title>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"  />
+        <link rel='stylesheet' href='https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css' />
         <script src="assets/javascript/jquery-1.11.1.min.js" ></script>
         <script src='assets/javascript/common.js'></script>
     </head>
@@ -19,50 +17,28 @@ and open the template in the editor.
                 <div class='panel-body'>
 
                     <ul id='waitingList' class='nav nav-tabs'>
-                        <li class='tabstatus active'><a href='#allReservation'>All Reservation</a></li>
-                        <li><a href='#online'>Online Booking</a></li>    
-                        <li><a href='#walkin'>Walk In Booking</a></li>
-                        <li><a href='#failed'>Failed To Arrive</a></li>
+                        <li class='active' ><a href='#allReservation' data-tab='all'>All Reservation</a></li>
+                        <li><a href='#online' data-tab='web'>Web Booking</a></li>    
+                        <li><a href='#online' data-tab='mobile'>Mobile Booking</a></li>    
+                        <li><a href='#walkin' data-tab='walkin'>Walk In Booking</a></li>
+                        <li><a href='#failed' data-tab='failed'>Failed To Arrive</a></li>
                     </ul>
 
                     <br>
 
-                    <div class="tab-content">
-                        <div role="tabpanel" class="tab-pane active" id="allReservation">
-                            <table id='listAllReservation' class='table'>
-                                <thead>
-                                    <tr>
-                                        <th>No</th>
-                                        <th class='text-center'>Type</th>
-                                        <th>Register Queue</th>
-                                        <th>Customer Name</th>
-                                        <th>Status</th>
-                                        <th class='text-center'>Action</th>
-                                    </tr>
-                                </thead>
-                                <tbody></tbody>
-                            </table>
-                        </div>
-                        <div role="tabpanel" class="tab-pane" id="online">
-                            <table id='listOnlineReservation' class='table'>
-                                <thead>
-                                    <tr>
-                                        <th>No</th>
-                                        <th class='text-center'>Type</th>
-                                        <th>Register Queue</th>
-                                        <th>Customer Name</th>
-                                        <th>Status</th>
-                                        <th class='text-center'>Action</th>
-                                    </tr>
-                                </thead>
-                                <tbody></tbody>
-                            </table>
-                        </div>
-                        <div role="tabpanel" class="tab-pane" id="walkin">walkin</div>
-                        <div role="tabpanel" class="tab-pane" id="failed">action</div>
-                    </div>
-
-
+                    <table id='listReservation' class='table table-striped'>
+                        <thead>
+                            <tr>
+                                <th>No Reserve</th>
+                                <th class='text-center'>Type</th>
+                                <th>Register Queue</th>
+                                <th>Customer Name</th>
+                                <th>Status</th>
+                                <th class='text-center'>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
                 </div>
             </div>
 
@@ -72,25 +48,61 @@ and open the template in the editor.
 
             $(function () {
                 var $org_id = getUrlVars()['id'];
-
+                
+                
                 $('#waitingList a').click(function (e) {
                     e.preventDefault()
-                    $(this).tab('show')
-                })
+                    $(this).tab('show');
+                    $('.mobile, .web, .walkin, .failed').hide();
+                    switch($(this).data('tab')){
+                        case 'all':
+                            $('.mobile, .web, .walkin').show();
+                            break;
+                        case 'web':
+                            $('.web').show();
+                        break;
+                        case 'mobile':
+                            $('.mobile').show();
+                            break;
+                        case 'walkin':
+                            $('.walkin').show();
+                            break;
+                        case 'failed':
+                            $('.failed').show();
+                            break;
+                    }
+                    
+                });
 
                 $.ajax({
                     url: 'https://onewoorks-solutions.com/smartq/queue.json?id=' + $org_id,
                     success: function (data) {
                         var table = '';
+                        var status = '';
                         $(data).each(function (i, v) {
-                            table += '<tr>';
-                            table += '<td>' + (i + 1) + '</td>';
-                            table += '<td class="text-center"><i class="glyphicon glyphicon-phone"></i>'+v.register_type+'</td>';
+                            if(v.status =='failed-to-arrive'){
+                                status = 'failed';
+                            }
+                            table += '<tr class="' + v.register_type + ' ' +status+'">';
+                            table += '<td>' + v.queue_no + '</td>';
+                            table += '<td class="text-center">';
+                            switch (v.register_type) {
+                                case 'mobile':
+                                    table += '<i class="fa fa-mobile"></i>';
+                                    break;
+                                case 'web':
+                                    table += '<i class="fa fa-globe"></i>';
+                                    break;
+                                case 'walkin':
+                                    table += '<i class="fa fa-blind"></i>';
+                                    break;
+                            }
+                            table += '</td>';
                             table += '<td>' + v.timestamp + '</td>';
                             table += '<td>' + v.name.toUpperCase() + '</td>';
                             table += '<td>' + v.status + '</td>';
                             table += '<td class="text-center">';
-                            table += '<div class="btn-group">';
+                            table += '<div class="btn-group btn-group-sm">';
                             table += '<div class="btn btn-default">View</div>';
                             table += '<div class="btn btn-default">Paging</div>';
                             table += '<div class="btn btn-default">Cancel</div>';
@@ -98,8 +110,7 @@ and open the template in the editor.
                             table += '</td>';
                             table += '</tr>';
                         });
-                        $("table#listAllReservation tbody").html(table);
-                        $("table#listOnlineReservation tbody").html(table);
+                        $("table#listReservation tbody").html(table);
                     }
                 });
             });
